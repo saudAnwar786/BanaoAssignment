@@ -9,8 +9,10 @@ import retrofit2.http.Query
 
 interface ImageApi {
 
-    @GET("/services/rest/?method=flickr.photos.getRecent")
+    @GET("/services/rest/")
      suspend fun getRecentPhotos(
+        @Query("method")
+        method :String = "flickr.photos.getRecent",
         @Query("per_page")
          perPage: Int = 20,
         @Query("page")

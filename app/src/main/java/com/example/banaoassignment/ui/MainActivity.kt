@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.banaoassignment.R
 import com.example.banaoassignment.Resource
@@ -64,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         binding.rvImages.apply {
             imageAdapter = ImageAdapter()
             adapter = imageAdapter
-            layoutManager = LinearLayoutManager(this@MainActivity)
+            layoutManager = GridLayoutManager(this@MainActivity,2)
 
         }
     }
