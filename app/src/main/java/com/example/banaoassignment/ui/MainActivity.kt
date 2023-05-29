@@ -22,13 +22,14 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding:ActivityMainBinding
-   private lateinit var imageAdapter: ImageAdapter
+    private lateinit var imageAdapter: ImageAdapter
     private val imageViewModel:MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         setUpRecyclerView()
         subscribeToObservers()
     }
@@ -42,7 +43,6 @@ class MainActivity : AppCompatActivity() {
                        result.message?.let {
                            Snackbar.make(binding.root,"${result.message}",Snackbar.LENGTH_LONG).show()
                        }
-
                    }
                    is Resource.Loading ->
                    {
@@ -54,7 +54,6 @@ class MainActivity : AppCompatActivity() {
                        binding.progressBar.visibility = View.GONE
                        result.data?.let { photos ->
                           imageAdapter.differ.submitList(photos.photo)
-
                        }
                    }
                }

@@ -11,14 +11,15 @@ interface ImageApi {
 
     @GET("/services/rest/")
      suspend fun getRecentPhotos(
-        @Query("method")
-        method :String = "flickr.photos.getRecent",
-        @Query("per_page")
-         perPage: Int = 20,
-        @Query("page")
-        pageNo:Int = 1,
-        @Query("api_key")
-        apiKey:String = API_KEY
+
+        @Query("per_page") perPage:Int = 50,
+        @Query("page") pageNo: Int = 1,
+        @Query("method") method: String = "flickr.photos.getRecent",
+        @Query("api_key") api_key: String = API_KEY,
+        @Query("format") format: String = "json",
+        @Query("nojsoncallback") nojsoncallback: Int = 1,
+        @Query("extras") extras: String = "url_s",
+        @Query("text") text: String = "cat"
      ):Response<Photos>
 
 

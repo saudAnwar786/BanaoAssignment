@@ -5,6 +5,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.provider.ContactsContract
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -25,7 +26,6 @@ class MainViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ):ViewModel() {
 
-
    var images = MutableLiveData<Resource<Photos>>()
    init {
        getRecentImages(1)
@@ -39,7 +39,9 @@ class MainViewModel @Inject constructor(
         images.postValue(Resource.Loading())
          try{
              if(hasInternetConnection()){
+
                 val response= respository.getRecentPhotos(pageNo)
+                 Log.d("ViewModel","REspomse")
                 images.postValue(handleImageResponse(response))
              }else{
                  images.postValue(Resource.Error("No Internet Connection"))
