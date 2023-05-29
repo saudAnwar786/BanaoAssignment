@@ -33,6 +33,7 @@ class ImageAdapter:RecyclerView.Adapter<ImageAdapter.ImageViewHolder>() {
 
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         val currItem= differ.currentList[position]
+
         holder.binding.apply {
             val context  = root.context
             Glide.with(context).load(currItem.url_s)

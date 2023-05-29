@@ -5,16 +5,19 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.provider.ContactsContract
-import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.banaoassignment.Resource
+import com.example.banaoassignment.models.Images
+import com.example.banaoassignment.models.Photo
 import com.example.banaoassignment.models.Photos
 import com.example.banaoassignment.repository.MainRepository
 import dagger.hilt.android.internal.Contexts
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.io.IOException
@@ -22,48 +25,63 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val respository:MainRepository,
+    private val repository:MainRepository,
     @ApplicationContext private val context: Context
 ):ViewModel() {
 
-   var images = MutableLiveData<Resource<Photos>>()
+    private val _response: MutableLiveData<List<Photo>> = MutableLiveData()
+    val response: LiveData<List<Photo>> = _response
    init {
-       getRecentImages(1)
+       getAllImages()
    }
 
-    fun getRecentImages(pageNo: Int) = viewModelScope.launch {
-            safeGetImageCall(pageNo)
-    }
+//    fun getRecentImages(pageNo: Int) = viewModelScope.launch {
+//            safeGetImageCall(pageNo)
+//    }
+    private fun getAllImages(){
+        viewModelScope.launch {
+            val result = repository.getAllImages()
+            result.collectLatest {
+                when(it){
+                    is Resource.Success->{
+                        _response.value = it.data!!
+                    }
+                    is Resource.Loading->{
 
-    suspend fun safeGetImageCall(pageNo:Int){
-        images.postValue(Resource.Loading())
-         try{
-             if(hasInternetConnection()){
+                    }
+                    is Resource.Error->{
 
-                val response= respository.getRecentPhotos(pageNo)
-                 Log.d("ViewModel","REspomse")
-                images.postValue(handleImageResponse(response))
-             }else{
-                 images.postValue(Resource.Error("No Internet Connection"))
-             }
+                    }
+                }
 
-         }catch (t: Throwable){
-             when(t){
-                 is IOException-> images.postValue(Resource.Error("Network Failure"))
-                 else -> images.postValue(Resource.Error("Conversion Problem"))
-             }
-         }
-    }
-    private fun handleImageResponse(response: Response<Photos>) : Resource<Photos>{
-        if(response.isSuccessful){
-            response.body()?.let {
-                 return Resource.Success(it)
             }
-
         }
-            return Resource.Error(response.message())
-
     }
+//    suspend fun safeGetImageCall(pageNo:Int){
+//        images.postValue(Resource.Loading())
+//         try{
+//             if(hasInternetConnection()){
+//                val response = repository.getRecentPhotos(pageNo)
+//                images.postValue(handleImageResponse(response))
+//             }else{
+//                 images.postValue(Resource.Error("No Internet Connection"))
+//             }
+//
+//         }catch (t: Throwable){
+//             when(t){
+//                 is IOException-> images.postValue(Resource.Error("Network Failure"))
+//                 else -> images.postValue(Resource.Error("Conversion Problem"))
+//             }
+//         }
+//    }
+//    private fun handleImageResponse(response: Response<Images>) : Resource<List<Photo>>{
+//        if(response.isSuccessful){
+//            response.body()?.let {
+//                 return Resource.Success(it.photos.photo)
+//            }
+//        }
+//            return Resource.Error(response.message())
+//    }
     private fun hasInternetConnection(): Boolean {
 
         val connectivityManager = Contexts.getApplication(context).getSystemService(

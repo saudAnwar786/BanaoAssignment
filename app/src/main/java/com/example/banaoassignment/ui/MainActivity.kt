@@ -2,6 +2,7 @@ package com.example.banaoassignment.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
@@ -29,43 +30,45 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         setUpRecyclerView()
-        subscribeToObservers()
+        imageViewModel.response.observe(this
+
+        ) { imageList ->
+            imageAdapter.differ.submitList(imageList)
+        }
     }
 
-    private fun subscribeToObservers(){
-        imageViewModel.images.observe(this, Observer { result->
-               when(result){
-                   is Resource.Error ->
-                   {
-                       binding.progressBar.visibility = View.GONE
-                       result.message?.let {
-                           Snackbar.make(binding.root,"${result.message}",Snackbar.LENGTH_LONG).show()
-                       }
-                   }
-                   is Resource.Loading ->
-                   {
-                       binding.progressBar.visibility = View.VISIBLE
-
-                   }
-                   is Resource.Success ->
-                   {
-                       binding.progressBar.visibility = View.GONE
-                       result.data?.let { photos ->
-                          imageAdapter.differ.submitList(photos.photo)
-                       }
-                   }
-               }
-
-        })
-    }
+//    private fun subscribeToObservers(){
+//        imageViewModel.images.observe(this, Observer { result->
+//               when(result){
+//                   is Resource.Error ->
+//                   {
+//                       binding.progressBar.visibility = View.GONE
+//                       result.message?.let {
+//                           Snackbar.make(binding.root,"${result.message}",Snackbar.LENGTH_LONG).show()
+//                       }
+//                   }
+//                   is Resource.Loading ->
+//                   {
+//                       binding.progressBar.visibility = View.VISIBLE
+//
+//                   }
+//                   is Resource.Success ->
+//                   {
+//                       binding.progressBar.visibility = View.GONE
+//                       result.data?.let { photos->
+//                          imageAdapter.differ.submitList(photos)
+//                       }
+//                   }
+//               }
+//
+//        })
+//    }
     private fun setUpRecyclerView(){
+        imageAdapter = ImageAdapter()
         binding.rvImages.apply {
-            imageAdapter = ImageAdapter()
             adapter = imageAdapter
             layoutManager = GridLayoutManager(this@MainActivity,2)
-
         }
     }
 }
