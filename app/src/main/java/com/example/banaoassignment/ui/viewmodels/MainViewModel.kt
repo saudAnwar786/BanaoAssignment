@@ -5,6 +5,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.provider.ContactsContract
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -40,20 +41,27 @@ class MainViewModel @Inject constructor(
 //    }
     private fun getAllImages(){
         viewModelScope.launch {
-            val result = repository.getAllImages()
-            result.collectLatest {
-                when(it){
-                    is Resource.Success->{
-                        _response.value = it.data!!
-                    }
-                    is Resource.Loading->{
+            if(hasInternetConnection()) {
+                val result = repository.getAllImages()
+                result.collectLatest {
+                    when (it) {
+                        is Resource.Success -> {
+                            _response.value = it.data!!
+                        }
 
-                    }
-                    is Resource.Error->{
+                        is Resource.Loading -> {
 
+                        }
+
+                        is Resource.Error -> {
+
+                        }
                     }
+
                 }
-
+            }else
+            {
+                Log.d("MainViewModel","No internet connection")
             }
         }
     }
