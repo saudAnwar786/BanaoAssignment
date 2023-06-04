@@ -1,7 +1,7 @@
 package com.example.banaoassignment.di
 
 import com.example.banaoassignment.Constants.BASE_URL
-import com.example.banaoassignment.api.ImageApi
+import com.example.banaoassignment.data.api.ImageApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,7 +25,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient):ImageApi{
+    fun provideRetrofit(okHttpClient: OkHttpClient): ImageApi {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(okHttpClient)

@@ -1,4 +1,4 @@
-package com.example.banaoassignment.models
+package com.example.banaoassignment.data.models
 
 data class Photo(
     val farm: Int,

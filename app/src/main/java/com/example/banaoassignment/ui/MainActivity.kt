@@ -14,6 +14,8 @@ import com.example.banaoassignment.R
 import com.example.banaoassignment.Resource
 import com.example.banaoassignment.adapters.ImageAdapter
 import com.example.banaoassignment.databinding.ActivityMainBinding
+import com.example.banaoassignment.paging.ImagePagingAdapter
+import com.example.banaoassignment.paging.LoaderPaginAdapter
 import com.example.banaoassignment.ui.viewmodels.MainViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,7 +27,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding:ActivityMainBinding
-    private lateinit var imageAdapter: ImageAdapter
+    private lateinit var imageAdapter: ImagePagingAdapter
     private val imageViewModel:MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,11 +47,11 @@ class MainActivity : AppCompatActivity() {
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         setUpRecyclerView()
-        imageViewModel.response.observe(this
 
-        ) { imageList ->
-            imageAdapter.differ.submitList(imageList)
-        }
+        imageViewModel.list.observe(this,Observer{
+            imageAdapter.submitData(lifecycle,it)
+        })
+
     }
 
 //    private fun subscribeToObservers(){
@@ -79,9 +81,13 @@ class MainActivity : AppCompatActivity() {
 //        })
 //    }
     private fun setUpRecyclerView(){
-        imageAdapter = ImageAdapter()
+        imageAdapter = ImagePagingAdapter()
         binding.rvImages.apply {
-            adapter = imageAdapter
+            adapter = imageAdapter.withLoadStateHeaderAndFooter(
+                footer = LoaderPaginAdapter(),
+                header = LoaderPaginAdapter()
+            )
+            setHasFixedSize(true)
             layoutManager = GridLayoutManager(this@MainActivity,2)
         }
     }

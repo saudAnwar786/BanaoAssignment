@@ -10,10 +10,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.example.banaoassignment.Resource
-import com.example.banaoassignment.models.Images
-import com.example.banaoassignment.models.Photo
-import com.example.banaoassignment.models.Photos
+import com.example.banaoassignment.data.models.Images
+import com.example.banaoassignment.data.models.Photo
+import com.example.banaoassignment.data.models.Photos
 import com.example.banaoassignment.repository.MainRepository
 import dagger.hilt.android.internal.Contexts
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,41 +31,39 @@ class MainViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ):ViewModel() {
 
-    private val _response: MutableLiveData<List<Photo>> = MutableLiveData()
-    val response: LiveData<List<Photo>> = _response
-   init {
-       getAllImages()
-   }
+//    private val _response: MutableLiveData<List<Photo>> = MutableLiveData()
+//    val response: LiveData<List<Photo>> = _response
+   val list =  repository.getAllImages().cachedIn(viewModelScope)
 
 //    fun getRecentImages(pageNo: Int) = viewModelScope.launch {
 //            safeGetImageCall(pageNo)
 //    }
-    private fun getAllImages(){
-        viewModelScope.launch {
-            if(hasInternetConnection()) {
-                val result = repository.getAllImages()
-                result.collectLatest {
-                    when (it) {
-                        is Resource.Success -> {
-                            _response.value = it.data!!
-                        }
-
-                        is Resource.Loading -> {
-
-                        }
-
-                        is Resource.Error -> {
-
-                        }
-                    }
-
-                }
-            }else
-            {
-                Log.d("MainViewModel","No internet connection")
-            }
-        }
-    }
+//    private fun getAllImages(){
+//        viewModelScope.launch {
+//            if(hasInternetConnection()) {
+//                val result = repository.getAllImages()
+//                result.collectLatest {
+//                    when (it) {
+//                        is Resource.Success -> {
+//                            _response.value = it.data!!
+//                        }
+//
+//                        is Resource.Loading -> {
+//
+//                        }
+//
+//                        is Resource.Error -> {
+//
+//                        }
+//                    }
+//
+//                }
+//            }else
+//            {
+//                Log.d("MainViewModel","No internet connection")
+//            }
+//        }
+//    }
 //    suspend fun safeGetImageCall(pageNo:Int){
 //        images.postValue(Resource.Loading())
 //         try{

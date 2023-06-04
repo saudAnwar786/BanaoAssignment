@@ -1,10 +1,10 @@
-package com.example.banaoassignment.api
+package com.example.banaoassignment.data.api
 
 import com.example.banaoassignment.Constants
 import com.example.banaoassignment.Constants.API_KEY
-import com.example.banaoassignment.models.Images
-import com.example.banaoassignment.models.Photo
-import com.example.banaoassignment.models.Photos
+import com.example.banaoassignment.data.models.Images
+import com.example.banaoassignment.data.models.Photo
+import com.example.banaoassignment.data.models.Photos
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -19,7 +19,8 @@ interface ImageApi {
         @Query("api_key") api_key: String = Constants.API_KEY,
         @Query("format") format: String = "json",
         @Query("nojsoncallback") nojsoncallback: Int = 1,
-        @Query("extras") extras: String = "url_s"
-     ):Images
+        @Query("extras") extras: String = "url_s",
+        @Query("text") query:String = "cat"
+     ): Images
 
 }

@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.banaoassignment.databinding.ItemImagePreviewBinding
-import com.example.banaoassignment.models.Photo
-import com.example.banaoassignment.models.Photos
+import com.example.banaoassignment.data.models.Photo
+import com.example.banaoassignment.data.models.Photos
 
 class ImageAdapter:RecyclerView.Adapter<ImageAdapter.ImageViewHolder>() {
 
