@@ -8,6 +8,9 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.banaoassignment.R
@@ -27,8 +30,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding:ActivityMainBinding
-    private lateinit var imageAdapter: ImagePagingAdapter
-    private val imageViewModel:MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,49 +47,16 @@ class MainActivity : AppCompatActivity() {
         )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
-        setUpRecyclerView()
 
-        imageViewModel.list.observe(this,Observer{
-            imageAdapter.submitData(lifecycle,it)
-        })
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment) as NavHostFragment
+        val navController = navHostFragment.findNavController()
+        binding.bottomNavigationView.setupWithNavController(
+            navController
+        )
+
 
     }
 
-//    private fun subscribeToObservers(){
-//        imageViewModel.images.observe(this, Observer { result->
-//               when(result){
-//                   is Resource.Error ->
-//                   {
-//                       binding.progressBar.visibility = View.GONE
-//                       result.message?.let {
-//                           Snackbar.make(binding.root,"${result.message}",Snackbar.LENGTH_LONG).show()
-//                       }
-//                   }
-//                   is Resource.Loading ->
-//                   {
-//                       binding.progressBar.visibility = View.VISIBLE
-//
-//                   }
-//                   is Resource.Success ->
-//                   {
-//                       binding.progressBar.visibility = View.GONE
-//                       result.data?.let { photos->
-//                          imageAdapter.differ.submitList(photos)
-//                       }
-//                   }
-//               }
-//
-//        })
-//    }
-    private fun setUpRecyclerView(){
-        imageAdapter = ImagePagingAdapter()
-        binding.rvImages.apply {
-            adapter = imageAdapter.withLoadStateHeaderAndFooter(
-                footer = LoaderPaginAdapter(),
-                header = LoaderPaginAdapter()
-            )
-            setHasFixedSize(true)
-            layoutManager = GridLayoutManager(this@MainActivity,2)
-        }
-    }
+
+
 }

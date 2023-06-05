@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/imagesFragment">
+
+    <fragment
+        android:id="@+id/imagesFragment"
+        android:name="com.example.banaoassignment.ui.fragments.ImagesFragment"
+        android:label="ImagesFragment" />
+    <fragment
+        android:id="@+id/searchImageFragment"
+        android:name="com.example.banaoassignment.ui.fragments.SearchImageFragment"
+        android:label="SearchImageFragment" />
+</navigation>

@@ -39,8 +39,10 @@ class MainRepository @Inject constructor(
 //        }
 //    }
     fun getAllImages() = Pager(config = PagingConfig(pageSize = 20, maxSize = 100),
-                                pagingSourceFactory = {ImagePagingSource(retrofit)}).liveData
+                                pagingSourceFactory = {ImagePagingSource(retrofit,"cat")}).liveData
 
 
+    fun getAllSearchedImages(query:String) = Pager(config = PagingConfig(pageSize = 20, maxSize =100 ),
+                                   pagingSourceFactory = {ImagePagingSource(retrofit,query)}).liveData
 
 }

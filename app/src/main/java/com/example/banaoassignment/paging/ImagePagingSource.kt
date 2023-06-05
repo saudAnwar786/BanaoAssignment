@@ -11,7 +11,8 @@ import java.io.IOException
 import javax.inject.Inject
 
 class ImagePagingSource @Inject constructor(
-    private val api:ImageApi
+    private val api:ImageApi,
+    val query:String
 ) :PagingSource<Int,Photo>(){
     override fun getRefreshKey(state: PagingState<Int, Photo>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
@@ -23,7 +24,7 @@ class ImagePagingSource @Inject constructor(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Photo> {
         val position = params.key?:1
         return try{
-            val response = api.getRecentPhotos(pageNo = position)
+            val response = api.getRecentPhotos(pageNo = position, query = query)
             LoadResult.Page(data = response.photos.photo,prevKey = if(position == 1) null else position-1,
             nextKey = if(position == response.photos.pages) null else position+1)
 

@@ -33,31 +33,21 @@ class MainViewModel @Inject constructor(
 
 //    private val _response: MutableLiveData<List<Photo>> = MutableLiveData()
 //    val response: LiveData<List<Photo>> = _response
-   val list =  repository.getAllImages().cachedIn(viewModelScope)
 
-//    fun getRecentImages(pageNo: Int) = viewModelScope.launch {
-//            safeGetImageCall(pageNo)
+   val list =  repository.getAllImages().cachedIn(viewModelScope)
+    var query : MutableLiveData<String> = MutableLiveData("cat")
+    val searchNews   = repository.getAllSearchedImages(query.value?:"cat")
+
+
+
+//    fun getSearchImages(query:String) = viewModelScope.launch {
+//            safeGetImageCall(query)
 //    }
 //    private fun getAllImages(){
 //        viewModelScope.launch {
 //            if(hasInternetConnection()) {
 //                val result = repository.getAllImages()
-//                result.collectLatest {
-//                    when (it) {
-//                        is Resource.Success -> {
-//                            _response.value = it.data!!
-//                        }
 //
-//                        is Resource.Loading -> {
-//
-//                        }
-//
-//                        is Resource.Error -> {
-//
-//                        }
-//                    }
-//
-//                }
 //            }else
 //            {
 //                Log.d("MainViewModel","No internet connection")
